@@ -10,7 +10,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Install Dependencies
         run: |
           python3.11 -m venv venv
@@ -25,25 +25,25 @@ jobs:
           pytest
 
   continuous-deployment:
-    needs:  continuous-integration
+    needs: continuous-integration
     runs-on: self-hosted
-    
+
     steps:
       - name: Restart FastAPI Server
         env:
-            RUNNER_TRACK_PROCESSES: false
-        run:  | 
+          RUNNER_TRACK_PROCESSES: false
+        run: |
           # 1. Enter the environment
           # Note: The venv was created in the CI job in the same workspace
           source venv/bin/activate
-          
+
           echo "Stopping old server..."
           pkill uvicorn || echo "No server was running"
-          
+
           echo "Starting new server with venv..."
           # 2. Run uvicorn from WITHIN the venv
           nohup uvicorn main:app --host 0.0.0.0 --port 8000 > uvicorn.log 2>&1 &
-          
+
           # 3. Validation
           sleep 5
           if pgrep -x "uvicorn" > /dev/null
