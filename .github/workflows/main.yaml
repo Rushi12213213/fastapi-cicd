@@ -33,24 +33,17 @@ jobs:
         env:
           RUNNER_TRACK_PROCESSES: false
         run: |
-          # 1. Enter the environment
-          # Note: The venv was created in the CI job in the same workspace
           source venv/bin/activate
 
           echo "Stopping old server..."
           pkill uvicorn || echo "No server was running"
 
-          echo "Starting new server with venv..."
-          # 2. Run uvicorn from WITHIN the venv
-          nohup uvicorn main:app --host 0.0.0.0 --port 8000 > uvicorn.log 2>&1 &
+          echo "Starting new server..."
+          # 1. Start with nohup and move to background
+          # 2. Immediately 'disown' the last background process ($!)
+          nohup uvicorn main:app --host 0.0.0.0 --port 8000 > uvicorn.log 2>&1 & 
+          disown $! 
 
-          # 3. Validation
-          sleep 5
-          if pgrep -x "uvicorn" > /dev/null
-          then
-              echo "✅ FastAPI is running from venv!"
-          else
-              echo "❌ Failed. Log output:"
-              cat uvicorn.log
-              exit 1
-          fi
+          echo "Server started and disowned."
+          sleep 2
+          pgrep -x "uvicorn" && echo "✅ Process is alive in background"
