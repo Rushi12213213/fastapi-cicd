@@ -33,17 +33,9 @@ jobs:
         env:
           RUNNER_TRACK_PROCESSES: false
         run: |
-          source venv/bin/activate
-
-          echo "Stopping old server..."
-          pkill uvicorn || echo "No server was running"
-
-          echo "Starting new server..."
-          # 1. Start with nohup and move to background
-          # 2. Immediately 'disown' the last background process ($!)
-          nohup uvicorn main:app --host 0.0.0.0 --port 8000 > uvicorn.log 2>&1 & 
-          disown $! 
-
-          echo "Server started and disowned."
-          sleep 2
-          pgrep -x "uvicorn" && echo "✅ Process is alive in background"
+          # This command restarts the server with the latest code 
+          # Note: your runner user might need NOPASSWD sudo access for this command
+          sudo systemctl restart fastapi
+          
+          # Check status to make sure it's running
+          systemctl status fastapi | grep "Active: active"

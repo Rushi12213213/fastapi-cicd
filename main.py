@@ -13,7 +13,7 @@ def read_root():
 def read_item(item_id: int):
     return {"item_id": item_id, "active": True} 
 
-@router.get("/delay-check")
+@router.get("/delay")
 def read_item():
     time.sleep(2)
     return {"message":"server is healthy"} 
