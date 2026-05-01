@@ -27,3 +27,14 @@ jobs:
           # This kills the old server and starts the new one in the background
             pkill uvicorn || echo "No server was running"
             nohup uvicorn main:app --host 0.0.0.0 --port 8000 > uvicorn.log 2>&1 &
+          
+          # 3. CRITICAL: Wait 3 seconds and check if it's still alive
+          sleep 3
+          if pgrep -x "uvicorn" > /dev/null
+          then
+              echo "FastAPI is running successfully!"
+          else
+              echo "ERROR: FastAPI failed to start. Here is the log:"
+              cat uvicorn.log
+              exit 1 # This forces GitHub to show a RED failure
+          fi
