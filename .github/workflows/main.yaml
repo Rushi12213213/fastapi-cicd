@@ -27,8 +27,11 @@ jobs:
   continuous-deployment:
     needs:  continuous-integration
     runs-on: self-hosted
+    
     steps:
       - name: Restart FastAPI Server
+        env:
+            RUNNER_TRACK_PROCESSES: false
         run:  | 
           # 1. Enter the environment
           # Note: The venv was created in the CI job in the same workspace
