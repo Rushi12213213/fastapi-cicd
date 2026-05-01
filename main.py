@@ -7,7 +7,7 @@ router=APIRouter()
 
 @router.get("/")
 def read_root():
-    return {"status": "online", "message": "Hello from CI/CD"}
+    return {"status": "online", "message": "Server is online"}
 
 @router.get("/items/{item_id}")
 def read_item(item_id: int):
