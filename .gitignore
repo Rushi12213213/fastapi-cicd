@@ -1,0 +1,30 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environment (Very important to ignore!)
+venv/
+.venv/
+env/
+bin/
+lib/
+include/
+
+# Environment variables and secrets
+.env
+.flaskenv
+
+# Testing and Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# IDE specific files
+.vscode/
+.idea/
+
+# OS specific files
+.DS_Store
+Thumbs.db
+actions-runner/
